@@ -8,15 +8,21 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.animation.Animation;
+import android.view.animation.RotateAnimation;
+import android.widget.ImageView;
 
 public class MainActivity extends Activity {
 
     private SensorManager sensorManager;
 
+    private ImageView compassImg;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        compassImg = (ImageView) findViewById(R.id.compass_img);
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         Sensor magneticSensor = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
         Sensor accelerometerSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
@@ -36,6 +42,7 @@ public class MainActivity extends Activity {
 
         float[] accelerometerValues = new float[3];
         float[] magneticValues = new float[3];
+        private float lastRotateDegree;
 
         @Override
         public void onSensorChanged(SensorEvent event) {
@@ -49,6 +56,11 @@ public class MainActivity extends Activity {
             float[] values = new float[3];
             SensorManager.getRotationMatrix(R, null, accelerometerValues, magneticValues);
             SensorManager.getOrientation(R, values);
+            float rotateDegree = -(float) Math.toDegrees(values[0]);
+            if (Math.abs(rotateDegree - lastRotateDegree) > 1) {
+                RotateAnimation animation = new RotateAnimation(lastRotateDegree, rotateDegree, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+                animation.setFillAfter(true);
+            }
             Log.d("MainActivity", "value[0] is"+ Math.toDegrees(values[0]));
 
         }
