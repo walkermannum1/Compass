@@ -60,6 +60,8 @@ public class MainActivity extends Activity {
             if (Math.abs(rotateDegree - lastRotateDegree) > 1) {
                 RotateAnimation animation = new RotateAnimation(lastRotateDegree, rotateDegree, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
                 animation.setFillAfter(true);
+                compassImg.startAnimation(animation);
+                lastRotateDegree=rotateDegree;
             }
             Log.d("MainActivity", "value[0] is"+ Math.toDegrees(values[0]));
 
